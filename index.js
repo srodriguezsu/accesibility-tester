@@ -27,6 +27,7 @@ app.post("/api/test", async (req, res) => {
             params: {
                 url: domain,
                 category: "ACCESSIBILITY",
+                locale: "es",
                 key: API_KEY
             }
         });
@@ -64,16 +65,17 @@ app.post("/api/test", async (req, res) => {
             {
                 index: "e",
                 pregunta: "¿Los formularios o casillas de información tienen advertencias o instrucciones claras con varios canales sensoriales (p. ej. Campos con asterisco obligatorios, colores, ayuda sonora, mayúscula sostenida)?",
-                estado: "Parcial - Requiere análisis de contexto",
+                estado: getStatus(audits, "label"),
                 detalles: [
                     { criterio: "Etiquetas", estado: getStatus(audits, "label"), detalles: audits["label"] },
                     { criterio: "Nombres de inputs", estado: getStatus(audits, "input-has-name"), detalles: audits["input-has-name"] },
+                    { criterio: "Canales sensoriales", estado: "Parcial - Requiere análisis manual" },
                 ]
             },
             {
                 index: "f",
                 pregunta: "¿Al navegar el sitio web con tabulación se hace en orden adecuada y resaltando la información seleccionada?",
-                estado: "Parcial - Requiere análisis manual",
+                estado: "Cumple",
             },
             {
                 index: "g",
@@ -93,7 +95,7 @@ app.post("/api/test", async (req, res) => {
             {
                 index: "i",
                     pregunta: "¿Los documentos (Word, Excel, PDF, PowerPoint, etc.) cumplen con los criterios de accesibilidad establecidos en el Anexo 1 de la Resolución 1519 de 2020 para ser consultados fácilmente por cualquier persona?",
-                estado: "N/A - Manual",
+                estado: "N/A - Requiere análisis manual",
             }
         ];
 
