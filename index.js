@@ -41,7 +41,6 @@ app.post("/api/test", async (req, res) => {
                 index: "b",
                 pregunta: "¿Los videos o elementos multimedia tienen subtítulos y audio descripción?",
                 estado: "N/A - Requiere análisis manual",
-                detalles: []
             },
             {
                 index: "c",
@@ -55,8 +54,8 @@ app.post("/api/test", async (req, res) => {
                 estado: getStatus(audits, "aria-valid-attr"),
                 detalles: [
                     { criterio: "Idioma", estado: getStatus(audits, "html-has-lang") },
-                    { criterio: "Encabezados vacíos", estado: getStatus(audits, "empty-heading") },
-                    { criterio: "Roles ARIA válidos", estado: getStatus(audits, "aria-valid-attr") }
+                    { criterio: "Encabezados vacíos", estado: getStatus(audits, "empty-heading"), detalles: audits["empty-heading"] },
+                    { criterio: "Roles ARIA válidos", estado: getStatus(audits, "aria-valid-attr"), detalles: audits["aria-valid-attr"] },
                 ]
             },
             {
@@ -64,15 +63,14 @@ app.post("/api/test", async (req, res) => {
                 pregunta: "¿Los formularios tienen advertencias o instrucciones claras?",
                 estado: "Parcial - Requiere análisis de contexto",
                 detalles: [
-                    { criterio: "Etiquetas", estado: getStatus(audits, "label") },
-                    { criterio: "Nombres de inputs", estado: getStatus(audits, "input-has-name") }
+                    { criterio: "Etiquetas", estado: getStatus(audits, "label"), detalles: audits["label"] },
+                    { criterio: "Nombres de inputs", estado: getStatus(audits, "input-has-name"), detalles: audits["input-has-name"] },
                 ]
             },
             {
                 index: "f",
                 pregunta: "¿Tabulación ordenada?",
                 estado: "Parcial - Requiere análisis manual",
-                detalles: []
             },
             {
                 index: "g",
@@ -85,15 +83,14 @@ app.post("/api/test", async (req, res) => {
                 pregunta: "¿Lenguaje claro en títulos, enlaces y formularios?",
                 estado: "Parcial - Requiere análisis manual",
                 detalles: [
-                    { criterio: "Título del documento", estado: getStatus(audits, "document-title") },
-                    { criterio: "Nombres de enlaces", estado: getStatus(audits, "link-name") }
+                    { criterio: "Título del documento", estado: getStatus(audits, "document-title"), detalles: audits["document-title"] },
+                    { criterio: "Nombres de enlaces", estado: getStatus(audits, "link-name"), detalles: audits["link-name"] },
                 ]
             },
             {
                 index: "i",
                 pregunta: "¿Documentos externos cumplen accesibilidad?",
                 estado: "N/A - Manual",
-                detalles: []
             }
         ];
 

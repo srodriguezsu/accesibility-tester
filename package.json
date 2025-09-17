@@ -9,9 +9,8 @@
   },
   "private": true,
   "dependencies": {
-    "axe-core": "^4.10.3",
-    "express": "^5.1.0",
-    "puppeteer": "^24.22.0"
+    "axios": "^1.12.2",
+    "express": "^5.1.0"
   },
   "keywords": [],
   "author": "",
