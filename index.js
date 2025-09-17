@@ -1,8 +1,11 @@
 const express = require("express");
 const axios = require("axios");
+const cors = require('cors');
 
 const app = express();
+
 app.use(express.json());
+app.use(cors());
 
 const PSI_API = "https://www.googleapis.com/pagespeedonline/v5/runPagespeed";
 const API_KEY = process.env.PSI_API_KEY;
@@ -33,24 +36,24 @@ app.post("/api/test", async (req, res) => {
         const evaluacion = [
             {
                 index: "a",
-                pregunta: "¿Los elementos no textuales tienen texto alternativo?",
+                pregunta: "¿Los elementos no textuales (ej. imágenes, diagramas, mapas, sonidos, vibraciones, etc.) que aparecen en el sitio web tienen texto alternativo?",
                 estado: getStatus(audits, "image-alt"),
                 detalles: audits["image-alt"]
             },
             {
                 index: "b",
-                pregunta: "¿Los videos o elementos multimedia tienen subtítulos y audio descripción?",
+                pregunta: "¿Los videos o elementos multimedia tienen subtítulos y audio descripción (cuando no tiene audio original), como también su respectivo guion en texto?",
                 estado: "N/A - Requiere análisis manual",
             },
             {
                 index: "c",
-                pregunta: "¿El texto cumple con contraste y escalabilidad?",
+                pregunta: "¿El texto usado en el sitio web es de mínimo 12 puntos, con contraste de color que permita su visualización, y con posibilidad de ampliación hasta el 200% sin desconfiguración del contenido?",
                 estado: getStatus(audits, "color-contrast"),
                 detalles: audits["color-contrast"]
             },
             {
                 index: "d",
-                pregunta: "¿El código está ordenado con lenguaje marcado bien utilizado?",
+                pregunta: "¿El código de programación y el contenido del sitio web está ordenado, con lenguaje de marcado bien utilizado y comprensible sin tener en cuenta el aspecto visual del sitio web, con una estructura organizada, identificación coherente y unificada de los enlaces (vínculos/botones), y con la posibilidad de una navegación lineal y continua con esos enlaces, incluyendo un buscador?",
                 estado: getStatus(audits, "aria-valid-attr"),
                 detalles: [
                     { criterio: "Idioma", estado: getStatus(audits, "html-has-lang") },
@@ -60,7 +63,7 @@ app.post("/api/test", async (req, res) => {
             },
             {
                 index: "e",
-                pregunta: "¿Los formularios tienen advertencias o instrucciones claras?",
+                pregunta: "¿Los formularios o casillas de información tienen advertencias o instrucciones claras con varios canales sensoriales (p. ej. Campos con asterisco obligatorios, colores, ayuda sonora, mayúscula sostenida)?",
                 estado: "Parcial - Requiere análisis de contexto",
                 detalles: [
                     { criterio: "Etiquetas", estado: getStatus(audits, "label"), detalles: audits["label"] },
@@ -69,18 +72,18 @@ app.post("/api/test", async (req, res) => {
             },
             {
                 index: "f",
-                pregunta: "¿Tabulación ordenada?",
+                pregunta: "¿Al navegar el sitio web con tabulación se hace en orden adecuada y resaltando la información seleccionada?",
                 estado: "Parcial - Requiere análisis manual",
             },
             {
                 index: "g",
-                pregunta: "¿Control de contenidos con movimientos/parpadeos?",
+                pregunta: "¿Se permite control de contenidos con movimientos y parpadeo y de eventos temporizados?",
                 estado: getStatus(audits, "blink"),
                 detalles: audits["blink"]
             },
             {
                 index: "h",
-                pregunta: "¿Lenguaje claro en títulos, enlaces y formularios?",
+                pregunta: "¿El lenguaje de los títulos, páginas, sección, enlaces, mensajes de error, campos de formularios, es en español claro y comprensible (siguiendo la guía de lenguaje claro del DAFP en el caso de las entidades públicas, disponible en: https://www.portaltransparenciacolombia.gov.co/wp-content/uploads/2015/07/portaltritutariodecolombia_guia-de-lenguaje-claro-para-servidores-publicos.pdf).",
                 estado: "Parcial - Requiere análisis manual",
                 detalles: [
                     { criterio: "Título del documento", estado: getStatus(audits, "document-title"), detalles: audits["document-title"] },
@@ -89,7 +92,7 @@ app.post("/api/test", async (req, res) => {
             },
             {
                 index: "i",
-                pregunta: "¿Documentos externos cumplen accesibilidad?",
+                    pregunta: "¿Los documentos (Word, Excel, PDF, PowerPoint, etc.) cumplen con los criterios de accesibilidad establecidos en el Anexo 1 de la Resolución 1519 de 2020 para ser consultados fácilmente por cualquier persona?",
                 estado: "N/A - Manual",
             }
         ];
