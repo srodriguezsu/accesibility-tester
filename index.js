@@ -19,7 +19,10 @@ app.post("/api/test", async (req, res) => {
 
     let browser;
     try {
-        browser = await puppeteer.launch({ headless: "new" });
+        const browser = await puppeteer.launch({
+            args: ["--no-sandbox", "--disable-setuid-sandbox"]
+        });
+
         const page = await browser.newPage();
         await page.goto(domain, { waitUntil: "networkidle2" });
 
@@ -82,10 +85,8 @@ app.post("/api/test", async (req, res) => {
                 index: 'g',
                 pregunta: "¿Se permite control de contenidos con movimientos y parpadeo y de eventos temporizados?",
                 estado: getStatus(violations, "blink"),
-                detalles: [
-                    violations
-                        .filter(v => v.id === "blink")
-                ]
+                detalles: violations
+                    .filter(v => v.id === "blink")
             },
             {
                 index: 'h',
