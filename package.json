@@ -1,0 +1,19 @@
+{
+  "name": "accesibility-tester",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node index.js",
+    "test": "nodemon index.js"
+  },
+  "private": true,
+  "dependencies": {
+    "axe-core": "^4.10.3",
+    "express": "^5.1.0",
+    "puppeteer": "^24.22.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
