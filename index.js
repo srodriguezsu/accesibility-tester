@@ -1,55 +1,23 @@
 const express = require("express");
 const axios = require("axios");
 const cors = require('cors');
+const {getStatus, getMultipleStatus, getLighthouse} = require("./services");
 
 const app = express();
 
 app.use(express.json());
 app.use(cors());
 
-const PSI_API = "https://www.googleapis.com/pagespeedonline/v5/runPagespeed";
-const API_KEY = process.env.PSI_API_KEY;
 
-// Helper to map audits into pass/fail
-const getStatus = (audits, id) => {
-    if (!audits[id]) return "N/A";
-    return audits[id].score === 1 ? "Cumple" : "No Cumple";
-};
-
-const getMultipleStatus = (audits, ids) => {
-    let passed = 0;
-    let failed = 0;
-
-    ids.forEach(id => {
-        if (audits[id]) {
-            if (audits[id].score === 0) failed++;
-            if (audits[id].score !== 1) passed++;
-        }
-    });
-
-    if (passed === 0 && failed === 0) return "N/A";
-
-    if (passed > ids.length/2) return "Cumple";
-    else return "No Cumple";
-}
 
 app.post("/api/test", async (req, res) => {
     const { domain } = req.body;
     if (!domain) {
         return res.status(400).json({ error: "Debes enviar un dominio" });
     }
-
+    const { audits, categories } = await getLighthouse(domain);
     try {
-        const { data } = await axios.get(PSI_API, {
-            params: {
-                url: domain,
-                category: "ACCESSIBILITY",
-                locale: "es",
-                key: API_KEY
-            }
-        });
 
-        const audits = data.lighthouseResult.audits;
 
         const evaluacion = [
             {
@@ -114,11 +82,18 @@ app.post("/api/test", async (req, res) => {
                     pregunta: "¿Los documentos (Word, Excel, PDF, PowerPoint, etc.) cumplen con los criterios de accesibilidad establecidos en el Anexo 1 de la Resolución 1519 de 2020 para ser consultados fácilmente por cualquier persona?",
                 estado: "N/A - Requiere análisis manual",
             },
+
+            // PARTE 2
+
+            {
+                index: "2.1.A",
+                pregunta: "Top Bar o barra en la parte superior del sitio web, que redireccione al Portal Único del Estado Colombiano GOV.CO."
+            }
         ];
 
         res.json({
             dominio: domain,
-            score: data.lighthouseResult.categories.accessibility.score,
+            score: categories.accesibility.score,
             evaluacion
         });
 
