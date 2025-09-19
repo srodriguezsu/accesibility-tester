@@ -23,8 +23,8 @@ app.post("/api/test", async (req, res) => {
             {
                 index: "1.1.A",
                 pregunta: "¿Los elementos no textuales (ej. imágenes, diagramas, mapas, sonidos, vibraciones, etc.) que aparecen en el sitio web tienen texto alternativo?",
-                estado: getStatus(audits, "image-alt"),
-                detalles: audits["image-alt"]
+                estado: getMultipleStatus(audits, ["image-alt", "image-redundant-alt"]),
+                auditorias: [audits["image-alt"], audits["image-redundant-alt"]]
             },
             {
                 index: "1.1.B",
@@ -35,46 +35,48 @@ app.post("/api/test", async (req, res) => {
                 index: "1.1.C",
                 pregunta: "¿El texto usado en el sitio web es de mínimo 12 puntos, con contraste de color que permita su visualización, y con posibilidad de ampliación hasta el 200% sin desconfiguración del contenido?",
                 estado: getStatus(audits, "color-contrast"),
-                detalles: audits["color-contrast"]
+                auditorias: [audits["color-contrast"]]
             },
             {
                 index: "1.1.D",
                 pregunta: "¿El código de programación y el contenido del sitio web está ordenado, con lenguaje de marcado bien utilizado y comprensible sin tener en cuenta el aspecto visual del sitio web, con una estructura organizada, identificación coherente y unificada de los enlaces (vínculos/botones), y con la posibilidad de una navegación lineal y continua con esos enlaces, incluyendo un buscador?",
-                estado: getMultipleStatus(audits, ["html-has-lang", "aria-valid-attr", "empty-heading"]),
-                detalles: [
-                    { criterio: "Idioma", estado: getStatus(audits, "html-has-lang") },
-                    { criterio: "Encabezados vacíos", estado: getStatus(audits, "empty-heading"), detalles: audits["empty-heading"] },
-                    { criterio: "Roles ARIA válidos", estado: getStatus(audits, "aria-valid-attr"), detalles: audits["aria-valid-attr"] },
+                estado: getMultipleStatus(audits, ["html-has-lang", "aria-valid-attr", "aria-deprecated-role"]),
+                auditorias: [
+                    audits["html-has-lang"],
+                    audits["aria-valid-attr"],
+                    audits["aria-deprecated-role"],
                 ]
             },
             {
                 index: "1.1.E",
                 pregunta: "¿Los formularios o casillas de información tienen advertencias o instrucciones claras con varios canales sensoriales (p. ej. Campos con asterisco obligatorios, colores, ayuda sonora, mayúscula sostenida)?",
-                estado: getMultipleStatus(audits, ["label", "input-has-name"]),
-                detalles: [
-                    { criterio: "Etiquetas", estado: getStatus(audits, "label"), detalles: audits["label"] },
-                    { criterio: "Nombres de inputs", estado: getStatus(audits, "input-has-name"), detalles: audits["input-has-name"] },
-                    { criterio: "Canales sensoriales", estado: "N/A - Requiere análisis manual" },
+                estado: getStatus(audits, "label"),
+                auditorias: [
+                    audits["label"]
                 ]
             },
             {
                 index: "1.1.F",
                 pregunta: "¿Al navegar el sitio web con tabulación se hace en orden adecuada y resaltando la información seleccionada?",
-                estado: "Cumple",
+                estado: getStatus(audits, "tabindex"),
+                auditorias: [audits["tabindex"]]
             },
             {
                 index: "1.1.G",
                 pregunta: "¿Se permite control de contenidos con movimientos y parpadeo y de eventos temporizados?",
                 estado: getStatus(audits, "blink"),
-                detalles: audits["blink"]
+                auditorias: [audits["blink"]]
             },
             {
                 index: "1.1.H",
                 pregunta: "¿El lenguaje de los títulos, páginas, sección, enlaces, mensajes de error, campos de formularios, es en español claro y comprensible (siguiendo la guía de lenguaje claro del DAFP en el caso de las entidades públicas, disponible en: https://www.portaltransparenciacolombia.gov.co/wp-content/uploads/2015/07/portaltritutariodecolombia_guia-de-lenguaje-claro-para-servidores-publicos.pdf).",
-                estado: "N/A - Requiere análisis manual",
-                detalles: [
-                    { criterio: "Título del documento", estado: getStatus(audits, "document-title"), detalles: audits["document-title"] },
-                    { criterio: "Nombres de enlaces", estado: getStatus(audits, "link-name"), detalles: audits["link-name"] },
+                estado: getMultipleStatus(audits, ["document-title", "link-name", "button-name", "aria-hidden-body", "aria-hidden-focus"]),
+                auditorias: [
+                    audits["document-title"],
+                    audits["link-name"],
+                    audits["button-name"],
+                    audits["aria-hidden-body"],
+                    audits["aria-hidden-focus"],
                 ]
             },
             {
@@ -82,18 +84,11 @@ app.post("/api/test", async (req, res) => {
                     pregunta: "¿Los documentos (Word, Excel, PDF, PowerPoint, etc.) cumplen con los criterios de accesibilidad establecidos en el Anexo 1 de la Resolución 1519 de 2020 para ser consultados fácilmente por cualquier persona?",
                 estado: "N/A - Requiere análisis manual",
             },
-
-            // PARTE 2
-
-            {
-                index: "2.1.A",
-                pregunta: "Top Bar o barra en la parte superior del sitio web, que redireccione al Portal Único del Estado Colombiano GOV.CO."
-            }
         ];
 
         res.json({
             dominio: domain,
-            score: categories.accesibility.score,
+            score: categories.accessibility.score,
             evaluacion
         });
 

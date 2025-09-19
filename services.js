@@ -14,11 +14,12 @@ export const getMultipleStatus = (audits, ids) => {
 
     ids.forEach(id => {
         if (audits[id]) {
-            if (audits[id].score === 0) failed++;
-            if (audits[id].score !== 1) passed++;
+            console.log("Checking audit:", id, "Score:", audits[id].score);
+            if (audits[id].score === 1) passed++;
+            if (audits[id].score !== 1) failed++;
         }
     });
-
+    console.log(`Total Passed: ${passed}, Total Failed: ${failed}, Total Checked: ${ids.length}`);
     if (passed === 0 && failed === 0) return "N/A";
 
     if (passed > ids.length/2) return "Cumple";
